@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Portfolio Tracker</title>
+    <style>
+        /* Basic styles for the body */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container for the main content */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        /* Heading styles */
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        td {
+            background-color: #f6f8fa;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        tr:hover td {
+            background-color: #f0f0f0;
+        }
+
+        /* Button styles */
+        button {
+            background-color: #ff6363;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e45656;
+        }
+
+        /* Add stock form */
+        form {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            gap: 15px;
+            padding: 20px 0;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            flex: 1;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        input:hover, input:focus {
+            border: 1px solid #4a90e2;
+        }
+
+        input::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Button in form */
+        form button {
+            background-color: #36d399;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 16px;
+        }
+
+        form button:hover {
+            background-color: #30bb87;
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            input, button {
+                font-size: 14px;
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Stock Portfolio</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Quantity</th>
+                    <th>Purchase Price</th>
+                    <th>Current Price</th>
+                    <th>Profit/Loss</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.purchase_price }}</td>
+                    <td>{{ stock.current_price if stock.current_price else 'N/A' }}</td>
+                    <td>{{ stock.current_price - stock.purchase_price if stock.current_price else 'N/A' }}</td>
+                    <td>
+                        <form action="/remove_stock/{{ stock.id }}" method="POST">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Add a New Stock</h2>
+        <form action="/add_stock" method="POST">
+            <input type="text" name="symbol" placeholder="Stock Symbol" required>
+            <input type="number" name="quantity" placeholder="Quantity" required>
+            <input type="text" name="purchase_price" placeholder="Purchase Price" required>
+            <button type="submit">Add Stock</button>
+        </form>
+    </div>
+</body>
+</html>
